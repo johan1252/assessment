@@ -16,3 +16,6 @@ jspm_packages
 
 # eslint cache
 .eslintcache
+
+# Jest coverage directory
+coverage/

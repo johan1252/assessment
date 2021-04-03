@@ -74,8 +74,6 @@ curl https://n4qb6jwdag.execute-api.us-east-1.amazonaws.com/johanc/securityGroup
 
 ## Future enhancements
 1. Add caching of data to improve API performance
-1. Improved logging (with proper logging levels)
-1. Improved error handling to ensure customer friendly errors
 
 ## Contributing
 
