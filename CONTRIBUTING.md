@@ -20,3 +20,10 @@ npm run lint
 ```
 
 If Prettier has findings, you can run `npm run fix` to automatically fix formatting issues.
+Note that ESlint will also automatically run when doing your deployment through `serverless` as well due to the `ForkTsCheckerWebpackPlugin` plugin in `webpack.config.js` file.
+
+## Deployment 
+
+```
+npx sls deploy --stage <stageName>
+```
