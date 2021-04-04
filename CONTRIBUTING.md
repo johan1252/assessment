@@ -2,7 +2,7 @@
 
 ## Getting started
 
-To get started developing in this project you'll first want to install the Javascript packages.
+To get started developing in this project you'll first want to install the required NPM packages.
 This can be done by running:
 
 ```
@@ -11,11 +11,11 @@ npm ci
 
 ## Linting
 
-Three tools are used in this project to ensure code is ready for deployment.
+Three tools are used in this project to ensure code is sufficient quality.
 
 - [ESLint](https://eslint.org/) is used for typescript linting.
 - [Prettier](https://prettier.io/) is used for code formatting.
-- [Typescript](https://www.typescriptlang.org/docs/handbook/compiler-options.html) compilation with --noEmit flag is used to ensure the code compiles.
+- [Typescript](https://www.typescriptlang.org/docs/handbook/compiler-options.html) compilation with `--noEmit` flag is used to ensure the code compiles.
 
 To run all three tools on your code, simply run:
 
@@ -65,8 +65,18 @@ Time:        6.204 s, estimated 7 s
 If you only want to get code coverage for authHandler, the following could be used:
 `npm run coverage -- authHandler.test.ts `
 
+## Automated builds
+
+[Github Actions](https://github.com/features/actions) is used in this project to perform automated verification of each push and PR actions. The workflows configuration files used can be found in [.github/workflows](.github/workflows). The existing workflow will build (using tsc), lint (using eslint), format (using prettier), and test (using jest) your code on each push to github. In the future this can also be expanded to deploying directly to AWS upon successful merge to `main` (assuming proper branch protection mechanisms like required code reviews, and required status checks are in place).
+
+To see Github actions results see the [actions tab](https://github.com/johan1252/assessment/actions) in Github.
+
 ## Deployment
+
+This project used the serverless framework for deploying it's application code and infrastructure. To deploy (fresh deploy or upgrade) simply run the following command:
 
 ```
 npx sls deploy --stage <stageName>
 ```
+
+Note - Ensure your AWS credentials are pointing to the desired account.

@@ -1,5 +1,7 @@
 # assessment
 
+This project was created for the `API Gateway + Lambda` technical assessment. The project contains an AWS API Gateway endpoint that returns all security groups present in the account and is secured using an AWS API Gateway Custom Authorizer. The project uses Typescript on Node.js 14.x and uses ESLint, prettier, and Jest for quality assurance. Automated builds are orchestrated using Github actions.
+
 ## Getting Started
 
 ### Deployment
@@ -24,7 +26,7 @@ The endpoint to use can be found in the serverless deployment output.
 Example using curl:
 
 ```
-curl -H 'Authorization: Bearer superSecretToken' -v https://n4qb6jwdag.execute-api.us-east-1.amazonaws.com/johanc/securityGroups
+curl -H 'Authorization: Bearer superSecretToken' https://n4qb6jwdag.execute-api.us-east-1.amazonaws.com/johanc/securityGroups
 ```
 
 ### Sample output
@@ -94,6 +96,9 @@ curl -H 'Authorization: Bearer superSecretToken' -v https://n4qb6jwdag.execute-a
    1. DynamoDB as backend?
    1. JWT tokens?
    1. Integrate with single sign-on systems like Auth0?
+1. Handle 10Mb max payload size restriction by API Gateway (see [AWS docs](https://docs.aws.amazon.com/apigateway/latest/developerguide/limits.html))
+   1. Currently we assume that the total number of security groups in an account won't exceed a returned payload of 10Mb. This may not be true for large AWS accounts with lots of resources.
+   1. Pagination can be introduced to help ensure responses are always within the allowed limits.
 
 ## Contributing
 
