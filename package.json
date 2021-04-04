@@ -8,8 +8,8 @@
     "lint": "npm-run-all --parallel --aggregate-output eslint prettier typecheck",
     "fix": "npm-run-all --parallel --aggregate-output fix-prettier",
     "eslint": "eslint . --ext js,ts --cache --fix",
-    "prettier": "prettier --list-different './**/*.{js,ts}'",
-    "fix-prettier": "prettier --write './**/*.{js,ts}'",
+    "prettier": "prettier --list-different './**/*.{js,ts,md}'",
+    "fix-prettier": "prettier --write './**/*.{js,ts,md}'",
     "typecheck": "tsc --noEmit",
     "test": "jest",
     "coverage": "jest --coverage"

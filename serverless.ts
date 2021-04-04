@@ -7,6 +7,7 @@ const serverlessConfiguration: AWS = {
     webpack: {
       webpackConfig: './webpack.config.js',
       includeModules: true,
+      excludeFiles: '**/*.test.[t|j]s',
     },
   },
   // Add the serverless-webpack plugin
@@ -28,6 +29,12 @@ const serverlessConfiguration: AWS = {
     },
   },
   functions: {
+    customAuthorizer: {
+      name: '${self:service}-${self:provider.stage}-customAuthorizer',
+      handler: 'authHandler.customAuthorizer',
+      role: 'customAuthorizerLambdaIAMRole',
+      timeout: 15,
+    },
     securityGroups: {
       name: '${self:service}-${self:provider.stage}-securityGroups',
       handler: 'handler.securityGroups',
@@ -38,6 +45,12 @@ const serverlessConfiguration: AWS = {
           http: {
             method: 'get',
             path: 'securityGroups',
+            authorizer: {
+              name: 'customAuthorizer',
+              identitySource: 'method.request.header.Authorization',
+              type: 'token',
+              resultTtlInSeconds: 10,
+            },
           },
         },
       ],
@@ -111,6 +124,68 @@ const serverlessConfiguration: AWS = {
                   {
                     Effect: 'Allow',
                     Action: ['ec2:DescribeSecurityGroups', 'ec2:DescribeRegions'],
+                    Resource: '*',
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+      customAuthorizerLambdaIAMRole: {
+        Type: 'AWS::IAM::Role',
+        Properties: {
+          Path: '/assessment/',
+          AssumeRolePolicyDocument: {
+            Version: '2012-10-17',
+            Statement: [
+              {
+                Effect: 'Allow',
+                Principal: {
+                  Service: ['lambda.amazonaws.com'],
+                },
+                Action: 'sts:AssumeRole',
+              },
+            ],
+          },
+          Policies: [
+            {
+              PolicyName: 'CloudWatchLogs',
+              PolicyDocument: {
+                Statement: [
+                  {
+                    Effect: 'Allow',
+                    Action: ['logs:CreateLogGroup', 'logs:CreateLogStream', 'logs:PutLogEvents'],
+                    Resource: [
+                      {
+                        'Fn::Join': [
+                          ':',
+                          [
+                            'arn:aws:logs',
+                            { Ref: 'AWS::Region' },
+                            { Ref: 'AWS::AccountId' },
+                            'log-group:/aws/lambda/${self:functions.customAuthorizer.name}:*:*',
+                          ],
+                        ],
+                      },
+                    ],
+                  },
+                ],
+              },
+            },
+            {
+              PolicyName: 'xrayTracing',
+              PolicyDocument: {
+                Statement: [
+                  {
+                    Effect: 'Allow',
+                    Action: [
+                      'xray:PutTraceSegments',
+                      'xray:PutTelemetryRecords',
+                      'xray:GetSamplingRules',
+                      'xray:GetSamplingTargets',
+                      'xray:GetSamplingStatisticSummaries',
+                    ],
                     Resource: '*',
                   },
                 ],
