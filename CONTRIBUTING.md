@@ -67,6 +67,10 @@ If you only want to get code coverage for authHandler, the following could be us
 
 ## Deployment
 
+This project used the serverless framework for deploying it's application code and infrastructure. To deploy (fresh deploy or upgrade) simply run the following command:
+
 ```
 npx sls deploy --stage <stageName>
 ```
+
+Note - Ensure your AWS credentials are pointing to the desired account.
